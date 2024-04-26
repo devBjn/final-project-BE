@@ -86,6 +86,9 @@ export class ProjectService {
       .createQueryBuilder('e')
       .orderBy('e.id', 'DESC')
       .leftJoin('e.createdBy', 'user')
+      .leftJoinAndSelect('e.status', 'status')
+      .leftJoinAndSelect('e.priority', 'priority')
+      .leftJoinAndSelect('e.type', 'type')
       .leftJoin('e.project', 'project')
       .addSelect([
         'user.id',
@@ -153,7 +156,17 @@ export class ProjectService {
 
     const tasks = await this.getTaskListBaseQuery(project.id);
 
-    return { ...project, sections, tasks };
+    const res = sections.map((section) => {
+      const sectionTasks = tasks.filter(
+        (task) => task.status?.id === section.id,
+      );
+      return {
+        ...section,
+        tasks: sectionTasks,
+      };
+    });
+
+    return { ...project, sections: res, tasks };
   }
 
   public async createProject(
@@ -192,13 +205,25 @@ export class ProjectService {
     const sections: Section[] = await Promise.all(sectionsPromises);
     const teamUsers = await this.mapTeamUsers([...input.teamUsers]);
     const { password, ...info } = user;
+    const tasks = await this.getTaskListBaseQuery(project.id);
+
+    const res = sections.map((section) => {
+      const sectionTasks = tasks.filter(
+        (task) => task.status?.id === section.id,
+      );
+      return {
+        ...section,
+        tasks: sectionTasks,
+      };
+    });
+
     if (project.createdBy.id === user.id) {
       const result = await this.projectRepository.save({
         id: project.id,
         name: input.name,
         description: input.description,
         category: input.category,
-        sections,
+        sections: res,
         teamUsers,
         createdBy: user,
       });

@@ -14,6 +14,7 @@ export class SectionService {
   private getSectionsBaseQuery() {
     return this.sectionRepository
       .createQueryBuilder('e')
+      .leftJoinAndSelect('e.tasks', 'tasks')
       .orderBy('e.id', 'DESC');
   }
 

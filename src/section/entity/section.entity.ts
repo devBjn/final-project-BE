@@ -25,5 +25,6 @@ export class Section {
   project: Project;
 
   @OneToMany(() => Task, (task) => task.status)
+  @JoinColumn({ name: 'tasks' })
   tasks: Task[];
 }
