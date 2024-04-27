@@ -62,6 +62,7 @@ export class UserController {
       phone: user.phone,
       address: user.address,
       avatar: user.avatar,
+      color: user.color,
     };
   }
 

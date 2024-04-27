@@ -60,4 +60,6 @@ export class GetTaskResponse {
   comments?: Comment[];
 
   createdBy?: GetUserResponse;
+
+  timeCreated: Date;
 }

@@ -55,4 +55,7 @@ export class Task {
   @ManyToOne(() => User, (user) => user.ownerTask, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'createdBy' })
   createdBy?: User;
+
+  @Column()
+  timeCreated: Date;
 }

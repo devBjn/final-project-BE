@@ -50,6 +50,7 @@ export class SectionService {
         'user.firstName',
         'user.lastName',
         'user.avatar',
+        'user.color',
         'project.id',
       ])
       .andWhere('e.id = :id AND status.id = :statusId', {

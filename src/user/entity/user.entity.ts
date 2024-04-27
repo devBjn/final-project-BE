@@ -35,6 +35,9 @@ export class User {
   @Column({ nullable: true })
   address?: string;
 
+  @Column({ nullable: true })
+  color?: string;
+
   @OneToMany(() => Project, (project) => project.createdBy, { cascade: true })
   ownerProject?: Project[];
 

@@ -52,6 +52,8 @@ export class CommentService {
         'user.email',
         'user.firstName',
         'user.lastName',
+        'user.avatar',
+        'user.color',
       ])
       .leftJoin('e.project', 'project')
       .addSelect(['project.id'])
@@ -73,6 +75,8 @@ export class CommentService {
         'user.email',
         'user.firstName',
         'user.lastName',
+        'user.avatar',
+        'user.color',
         'task.id',
         'parent.id',
       ])
@@ -93,6 +97,8 @@ export class CommentService {
         'user.email',
         'user.firstName',
         'user.lastName',
+        'user.avatar',
+        'user.color',
         'task.id',
       ])
       .andWhere('e.id = :id', {

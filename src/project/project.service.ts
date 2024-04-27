@@ -94,6 +94,7 @@ export class ProjectService {
         'user.firstName',
         'user.lastName',
         'user.avatar',
+        'user.color',
         'project.id',
       ])
       .andWhere('project.id = :id', { id: projectId })
@@ -109,6 +110,8 @@ export class ProjectService {
         'user.email',
         'user.firstName',
         'user.lastName',
+        'user.avatar',
+        'user.color',
       ])
       .getMany();
 
@@ -134,6 +137,7 @@ export class ProjectService {
         'user.firstName',
         'user.lastName',
         'user.avatar',
+        'user.color',
       ])
       .andWhere('e.id = :id', {
         id,
@@ -407,6 +411,8 @@ export class ProjectService {
         'user.email',
         'user.firstName',
         'user.lastName',
+        'user.avatar',
+        'user.color',
       ])
       .getMany();
 

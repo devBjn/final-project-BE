@@ -66,6 +66,8 @@ export class TaskService {
         'user.email',
         'user.firstName',
         'user.lastName',
+        'user.avatar',
+        'user.color',
       ])
       .leftJoin('e.task', 'task')
       .andWhere('task.id = :id', { id })
@@ -126,6 +128,8 @@ export class TaskService {
         'user.email',
         'user.firstName',
         'user.lastName',
+        'user.avatar',
+        'user.color',
         'project.id',
       ])
       .getMany();
@@ -160,6 +164,7 @@ export class TaskService {
         'user.firstName',
         'user.lastName',
         'user.avatar',
+        'user.color',
         'project.id',
       ])
       .andWhere('e.id = :id', {
@@ -183,6 +188,7 @@ export class TaskService {
       priority: task.priority,
       type: task.type,
       time: task.time,
+      timeCreated: task.timeCreated,
       deadline: task.deadline,
       teamUsers: task.teamUsers,
       comments,
@@ -220,6 +226,7 @@ export class TaskService {
       teamUsers,
       comments: [],
       project,
+      timeCreated: new Date(),
       createdBy: userInfo,
     });
     return {
@@ -230,9 +237,11 @@ export class TaskService {
       priority: task.priority,
       type: task.type,
       time: task.time,
+      timeCreated: task.timeCreated,
       deadline: task.deadline,
       teamUsers: task.teamUsers,
       projectId: project.id,
+      createdBy: userInfo,
     };
   }
 
@@ -276,6 +285,7 @@ export class TaskService {
       priority: updatedTask.priority,
       type: updatedTask.type,
       time: updatedTask.time,
+      timeCreated: task.timeCreated,
       deadline: updatedTask.deadline,
       teamUsers: updatedTask.teamUsers,
       projectId: project.id,
@@ -303,6 +313,7 @@ export class TaskService {
       time,
       teamUsers,
       deadline,
+      timeCreated,
     } = await this.taskRepository.save({
       id: task.id,
       name: task.name,
@@ -311,6 +322,7 @@ export class TaskService {
       priority: task.priority,
       type: task.type,
       time: task.time,
+      timeCreated: task.timeCreated,
       deadline: task.deadline,
       project,
       teamUsers: updatedTeamUsers,
@@ -325,6 +337,7 @@ export class TaskService {
       time,
       deadline,
       teamUsers,
+      timeCreated,
       projectId: task.id,
     };
   }
@@ -350,6 +363,7 @@ export class TaskService {
       time,
       teamUsers,
       deadline,
+      timeCreated,
     } = await this.taskRepository.save({
       id: task.id,
       name: task.name,
@@ -359,6 +373,7 @@ export class TaskService {
       type: task.type,
       time: task.time,
       deadline: task.deadline,
+      timeCreated: task.timeCreated,
       project,
       teamUsers: updatedTeamUsers,
     });
@@ -371,6 +386,7 @@ export class TaskService {
       type,
       time,
       deadline,
+      timeCreated,
       teamUsers,
       projectId: task.projectId,
     };

@@ -79,6 +79,10 @@ export class AuthController {
     user.firstName = createUserRequest.firstName;
     user.lastName = createUserRequest.lastName;
 
+    const color: string =
+      '#' + Math.floor(Math.random() * 16777215).toString(16);
+
+    user.color = color;
     const savedUser = await this.userRepository.save(user);
     const token = this.authService.getTokenForUser(user);
 
@@ -88,6 +92,7 @@ export class AuthController {
       email: savedUser.email,
       firstName: savedUser.firstName,
       lastName: savedUser.lastName,
+      color: savedUser.color,
       token,
     };
   }

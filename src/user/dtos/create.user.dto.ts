@@ -57,4 +57,6 @@ export class GetUserResponse {
   phone?: string;
 
   address?: string;
+
+  color?: string;
 }
