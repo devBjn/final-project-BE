@@ -12,7 +12,7 @@ export class TypeService {
   ) {}
 
   private getTypeBaseQuery() {
-    return this.typeRepository.createQueryBuilder('e').orderBy('e.id', 'DESC');
+    return this.typeRepository.createQueryBuilder('e');
   }
 
   public async getAllTypes() {

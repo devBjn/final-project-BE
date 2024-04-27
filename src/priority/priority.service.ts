@@ -12,9 +12,7 @@ export class PriorityService {
   ) {}
 
   private getPriorityBaseQuery() {
-    return this.priorityRepository
-      .createQueryBuilder('e')
-      .orderBy('e.id', 'DESC');
+    return this.priorityRepository.createQueryBuilder('e');
   }
 
   public async getAllPriorities() {

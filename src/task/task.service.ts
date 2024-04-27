@@ -32,7 +32,7 @@ export class TaskService {
   ) {}
 
   private getTasksBaseQuery() {
-    return this.taskRepository.createQueryBuilder('e').orderBy('e.id', 'DESC');
+    return this.taskRepository.createQueryBuilder('e');
   }
 
   private mappedComment(comment: Comment): GetCommentResponse {
@@ -57,7 +57,6 @@ export class TaskService {
   private async getAllCommentByTask(id: string): Promise<Comment[]> {
     return await this.commentRepository
       .createQueryBuilder('e')
-      .orderBy('e.id', 'DESC')
       .leftJoin('e.createdBy', 'user')
       .leftJoinAndSelect('e.children', 'children')
       .leftJoinAndSelect('e.parent', 'parent')

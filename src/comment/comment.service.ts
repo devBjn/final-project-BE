@@ -20,9 +20,7 @@ export class CommentService {
   ) {}
 
   private getCommentsBaseQuery() {
-    return this.commentRepository
-      .createQueryBuilder('e')
-      .orderBy('e.id', 'DESC');
+    return this.commentRepository.createQueryBuilder('e');
   }
 
   private mappedComment(comment: Comment): GetCommentResponse {
@@ -47,7 +45,6 @@ export class CommentService {
   private async getTaskDetailQuery(id: string) {
     return await this.taskRepository
       .createQueryBuilder('e')
-      .orderBy('e.id', 'DESC')
       .leftJoin('e.createdBy', 'user')
       .addSelect([
         'user.id',

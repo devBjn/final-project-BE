@@ -32,9 +32,7 @@ export class ProjectService {
   ) {}
 
   private getProjectsBaseQuery() {
-    return this.projectRepository
-      .createQueryBuilder('e')
-      .orderBy('e.id', 'DESC');
+    return this.projectRepository.createQueryBuilder('e');
   }
 
   private async mapTeamUsers(data: Array<string>): Promise<GetUserResponse[]> {
@@ -84,7 +82,6 @@ export class ProjectService {
   private async getTaskListBaseQuery(projectId: string): Promise<Task[]> {
     return this.taskRepository
       .createQueryBuilder('e')
-      .orderBy('e.id', 'DESC')
       .leftJoin('e.createdBy', 'user')
       .leftJoinAndSelect('e.status', 'status')
       .leftJoinAndSelect('e.priority', 'priority')
@@ -166,6 +163,13 @@ export class ProjectService {
       };
     });
 
+    res.forEach((section: Section) => {
+      section.tasks.sort((a, b) => {
+        const indexA = section.taskIds.indexOf(a.id);
+        const indexB = section.taskIds.indexOf(b.id);
+        return indexA - indexB;
+      });
+    });
     return { ...project, sections: res, tasks };
   }
 

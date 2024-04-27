@@ -24,7 +24,15 @@ export class Section {
   @JoinColumn({ name: 'projectId' })
   project: Project;
 
+  // @OneToMany(() => Task, (task) => task.status)
+  // @Column({ type: 'json', nullable: true })
+  // tasks: Task[];
+
+  // @OneToMany(() => Task, (task) => task.status)
+  @JoinColumn({ name: 'taskIds' })
+  @Column({ type: 'simple-array', nullable: true })
+  taskIds: string[];
+
   @OneToMany(() => Task, (task) => task.status)
-  @JoinColumn({ name: 'tasks' })
   tasks: Task[];
 }

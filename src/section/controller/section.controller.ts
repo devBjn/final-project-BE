@@ -39,7 +39,6 @@ export class SectionController {
     @Body() input: CreateSectionRequest,
   ): Promise<Section> {
     const section = await this.sectionService.getSection(id);
-
     if (!section) {
       throw new NotFoundException();
     }

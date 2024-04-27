@@ -16,7 +16,7 @@ export class UserService {
   ) {}
 
   private getUsersBaseQuery() {
-    return this.userRepository.createQueryBuilder('e').orderBy('e.id', 'DESC');
+    return this.userRepository.createQueryBuilder('e');
   }
 
   private async checkExistUser(id: string): Promise<User> {
