@@ -23,7 +23,10 @@ export class Comment {
   @Column()
   updatedAt?: Date;
 
-  @ManyToOne(() => Task, (task) => task.comments)
+  @ManyToOne(() => Task, (task) => task.comments, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'task' })
   task?: Task;
 
@@ -31,9 +34,16 @@ export class Comment {
   @JoinColumn({ name: 'createdBy' })
   createdBy?: User;
 
-  @ManyToOne(() => Comment, (parent) => parent.children, { nullable: true })
+  @ManyToOne(() => Comment, (parent) => parent.children, {
+    nullable: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   parent?: Comment | null;
 
-  @OneToMany(() => Comment, (child) => child.parent)
+  @OneToMany(() => Comment, (child) => child.parent, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   children?: Comment[];
 }

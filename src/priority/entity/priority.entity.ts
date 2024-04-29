@@ -9,6 +9,9 @@ export class Priority {
   @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => Task, (task) => task.priority)
+  @OneToMany(() => Task, (task) => task.priority, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   tasks: Task[];
 }

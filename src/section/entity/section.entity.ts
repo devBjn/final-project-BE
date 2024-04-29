@@ -30,9 +30,15 @@ export class Section {
 
   // @OneToMany(() => Task, (task) => task.status)
   @JoinColumn({ name: 'taskIds' })
-  @Column({ type: 'simple-array', nullable: true })
+  @Column({
+    type: 'simple-array',
+    nullable: true,
+  })
   taskIds: string[];
 
-  @OneToMany(() => Task, (task) => task.status)
+  @OneToMany(() => Task, (task) => task.status, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   tasks: Task[];
 }

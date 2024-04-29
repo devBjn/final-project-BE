@@ -75,6 +75,7 @@ export class SectionService {
     input: CreateSectionRequest,
   ): Promise<Section> {
     let tasks = [];
+
     if (input.tasks.length) {
       tasks = await Promise.all(
         input.tasks.map(

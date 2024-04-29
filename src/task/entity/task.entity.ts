@@ -24,15 +24,27 @@ export class Task {
   @Column({ type: 'longtext', nullable: true })
   description: string;
 
-  @ManyToOne(() => Section, (task) => task.tasks, { nullable: true })
+  @ManyToOne(() => Section, (task) => task.tasks, {
+    nullable: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'status' })
   status: Section;
 
-  @ManyToOne(() => Priority, (priority) => priority.tasks, { nullable: true })
+  @ManyToOne(() => Priority, (priority) => priority.tasks, {
+    nullable: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn()
   priority: Priority;
 
-  @ManyToOne(() => Type, (type) => type.tasks, { nullable: true })
+  @ManyToOne(() => Type, (type) => type.tasks, {
+    nullable: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn()
   type: Type;
 
@@ -45,7 +57,10 @@ export class Task {
   @Column({ type: 'json', nullable: true })
   teamUsers: User[];
 
-  @OneToMany(() => Comment, (cmt) => cmt.task)
+  @OneToMany(() => Comment, (cmt) => cmt.task, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   comments: Comment[] | null;
 
   @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })

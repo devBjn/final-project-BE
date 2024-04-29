@@ -240,23 +240,6 @@ export class ProjectService {
         createdBy: info,
         tasks: project.tasks,
       };
-
-      // project.name = input.name;
-      // project.description = input.description;
-      // project.category = input.category;
-      // project.teamUsers = teamUsers; // Update teamUsers
-
-      // // Associate sections with the project
-      // project.sections = sections;
-
-      // // Save the updated project
-      // const updatedProject = await this.projectRepository.save(project);
-
-      // return {
-      //   ...updatedProject,
-      //   createdBy: info,
-      //   tasks: project.tasks,
-      // };
     }
 
     throw new BadRequestException('You can not edit project!');
