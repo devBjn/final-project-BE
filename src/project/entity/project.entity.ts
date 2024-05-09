@@ -25,9 +25,11 @@ export class Project {
   @Column()
   category: string;
 
-  @Column({ type: 'json', nullable: true })
-  // @OneToMany(() => Section, (section) => section.project)
+  @OneToMany(() => Section, (section) => section.project)
   sections: Section[] | null;
+
+  @Column({ type: 'json', nullable: true })
+  sectionsJson: Section[] | null;
 
   @Column({ type: 'json', nullable: true })
   teamUsers: User[] | null;

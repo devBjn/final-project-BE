@@ -143,28 +143,31 @@ export class ProjectService {
         id,
       });
     const project = await query.getOne();
-
     if (!project) {
       throw new BadRequestException('Project not found!');
     }
 
-    const sectionsPromises: Promise<Section>[] = project.sections.map(
+    const sectionsPromises: Promise<Section>[] = project.sectionsJson.map(
       async (section: Section) => {
         return await this.sectionService.getSection(section?.id);
       },
     );
-    const sections: Section[] = await Promise.all(sectionsPromises);
+    const sections: Section[] | [] = await Promise.all(sectionsPromises);
 
     const tasks = await this.getTaskListBaseQuery(project.id);
 
-    const res = sections.map((section) => {
+    let res = [];
+    sections.forEach((section) => {
       const sectionTasks = tasks.filter(
         (task) => task.status?.id === section.id,
       );
-      return {
-        ...section,
-        tasks: sectionTasks,
-      };
+      if (section) {
+        res.push({
+          ...section,
+          tasks: sectionTasks,
+        });
+      }
+      return res;
     });
 
     res.forEach((section: Section) => {
@@ -174,7 +177,7 @@ export class ProjectService {
         return indexA - indexB;
       });
     });
-    return { ...project, sections: res, tasks };
+    return { ...project, sectionsJson: res, tasks };
   }
 
   public async createProject(
@@ -194,7 +197,7 @@ export class ProjectService {
       description: input.description,
       category: input.category,
       teamUsers,
-      sections,
+      sectionsJson: sections,
       tasks: [],
       createdBy: info,
     });
@@ -231,7 +234,7 @@ export class ProjectService {
         name: input.name,
         description: input.description,
         category: input.category,
-        sections: res,
+        sectionsJson: res,
         teamUsers,
         createdBy: user,
       });
@@ -274,7 +277,7 @@ export class ProjectService {
         name: project.name,
         description: project.description,
         category: project.category,
-        sections: project.sections,
+        sectionsJson: project.sectionsJson,
         teamUsers: updatedTeamUsers,
         createdBy: user,
       });
@@ -309,7 +312,7 @@ export class ProjectService {
         name: project.name,
         description: project.description,
         category: project.category,
-        sections: project.sections,
+        sectionsJson: project.sectionsJson,
         teamUsers: updatedTeamUsers,
         createdBy: user,
       });
@@ -374,7 +377,7 @@ export class ProjectService {
       name: project.name,
       description: project.description,
       category: project.category,
-      sections: project.sections,
+      sectionsJson: project.sectionsJson,
       tasks: project.tasks,
       teamUsers: updatedTeamUsers,
       createdBy: project.createdBy,

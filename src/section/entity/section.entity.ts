@@ -18,8 +18,9 @@ export class Section {
   title: string;
 
   @ManyToOne(() => Project, (project) => project.sections, {
+    cascade: true,
     onDelete: 'CASCADE',
-    orphanedRowAction: 'delete',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'projectId' })
   project: Project;

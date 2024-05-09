@@ -32,7 +32,7 @@ export class GetProjectResponse {
 
   category: string;
 
-  sections: Array<Section>;
+  sectionsJson: Array<Section>;
 
   teamUsers: Array<GetUserResponse>;
 
