@@ -47,7 +47,7 @@ export class TaskSchedulerService {
   // @Cron('* * * * * *')
   async handleTaskScheduling() {
     const tasksToNotify: Task[] = await this.taskService.findTasksToSchedule();
-    console.log(tasksToNotify, 'task to notify');
+    // console.log(tasksToNotify, 'task to notify');
     await Promise.all(
       tasksToNotify.map((task: Task) => {
         task.teamUsers.forEach(async (user: User) => {
