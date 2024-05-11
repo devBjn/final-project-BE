@@ -50,7 +50,6 @@ export class TaskService {
         this.mappedComment(child),
       );
     }
-
     return commentResponse;
   }
 
@@ -59,6 +58,7 @@ export class TaskService {
       .createQueryBuilder('e')
       .leftJoin('e.createdBy', 'user')
       .leftJoinAndSelect('e.children', 'children')
+      .leftJoin('children.createdBy', 'childCreatedBy')
       .leftJoinAndSelect('e.parent', 'parent')
       .addSelect([
         'user.id',
@@ -68,6 +68,15 @@ export class TaskService {
         'user.lastName',
         'user.avatar',
         'user.color',
+      ])
+      .addSelect([
+        'childCreatedBy.id',
+        'childCreatedBy.username',
+        'childCreatedBy.email',
+        'childCreatedBy.firstName',
+        'childCreatedBy.lastName',
+        'childCreatedBy.avatar',
+        'childCreatedBy.color',
       ])
       .leftJoin('e.task', 'task')
       .andWhere('task.id = :id', { id })
@@ -175,9 +184,9 @@ export class TaskService {
     if (!task) throw new BadRequestException('Task not found!');
 
     const commentList = await this.getAllCommentByTask(task.id);
-    const commentsMapped = commentList.map((comment) =>
-      this.mappedComment(comment),
-    );
+    const commentsMapped = commentList.map((comment) => {
+      return this.mappedComment(comment);
+    });
     const comments = commentsMapped.filter((comment) => !comment.parentId);
     // delete task.project;
     return {
