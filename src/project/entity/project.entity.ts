@@ -35,8 +35,10 @@ export class Project {
   teamUsers: User[] | null;
 
   @OneToMany(() => Task, (task) => task.project, { cascade: true })
-  @Column({ type: 'json', nullable: true })
   tasks?: Task[] | null;
+
+  @Column({ type: 'json', nullable: true })
+  tasksJson?: Task[] | null;
 
   @ManyToOne(() => User, (user) => user.ownerProject, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'createdBy' })

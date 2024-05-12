@@ -36,7 +36,7 @@ export class GetProjectResponse {
 
   teamUsers: Array<GetUserResponse>;
 
-  tasks?: Array<Task>;
+  tasksJson?: Array<Task>;
 
   createdBy: GetUserResponse;
 }

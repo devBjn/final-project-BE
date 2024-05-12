@@ -117,10 +117,10 @@ export class ProjectService {
 
     const result: Project[] = await Promise.all(
       projects.map(async (project: Project) => {
-        const tasks = await this.getTaskListBaseQuery(project.id);
+        const tasksJson = await this.getTaskListBaseQuery(project.id);
         return {
           ...project,
-          tasks,
+          tasksJson,
         };
       }),
     );
@@ -143,6 +143,7 @@ export class ProjectService {
         id,
       });
     const project = await query.getOne();
+
     if (!project) {
       throw new BadRequestException('Project not found!');
     }
@@ -154,12 +155,12 @@ export class ProjectService {
     );
     const sections: Section[] | [] = await Promise.all(sectionsPromises);
 
-    const tasks = await this.getTaskListBaseQuery(project.id);
+    const tasksJson = await this.getTaskListBaseQuery(project.id);
 
     let res = [];
     sections.forEach((section) => {
-      const sectionTasks = tasks.filter(
-        (task) => task.status?.id === section.id,
+      const sectionTasks = tasksJson.filter(
+        (task) => task.status?.id === section?.id,
       );
       if (section) {
         res.push({
@@ -177,7 +178,7 @@ export class ProjectService {
         return indexA - indexB;
       });
     });
-    return { ...project, sectionsJson: res, tasks };
+    return { ...project, sectionsJson: res, tasksJson };
   }
 
   public async createProject(
@@ -198,7 +199,7 @@ export class ProjectService {
       category: input.category,
       teamUsers,
       sectionsJson: sections,
-      tasks: [],
+      tasksJson: [],
       createdBy: info,
     });
   }
@@ -241,7 +242,7 @@ export class ProjectService {
       return {
         ...result,
         createdBy: info,
-        tasks: project.tasks,
+        tasksJson: project.tasks,
       };
     }
 
@@ -284,7 +285,7 @@ export class ProjectService {
       return {
         ...result,
         createdBy: info,
-        tasks: project.tasks,
+        tasksJson: project.tasks,
       };
     }
     throw new BadRequestException('You can not add member to project!');
@@ -319,7 +320,7 @@ export class ProjectService {
       return {
         ...result,
         createdBy: info,
-        tasks: project.tasks,
+        tasksJson: project.tasks,
       };
     }
     throw new BadRequestException('You can not add member to project!');
