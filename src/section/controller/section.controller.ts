@@ -34,16 +34,13 @@ export class SectionController {
   @ApiParam({
     name: 'id',
   })
-  async update(
-    @Param('id') id,
-    @Body() input: CreateSectionRequest,
-  ): Promise<Section> {
+  async update(@Param('id') id, @Body() input: CreateSectionRequest) {
     const section = await this.sectionService.getSection(id);
     if (!section) {
       throw new NotFoundException();
     }
 
-    return await this.sectionService.updateSection(section, input);
+    return await this.sectionService.updateSectionQueue(section, input);
   }
 
   @Delete('remove/:id')

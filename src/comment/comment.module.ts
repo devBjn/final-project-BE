@@ -17,6 +17,8 @@ import { ProjectService } from 'src/project/project.service';
 import { MediaService } from 'src/media/media.service';
 import { FirebaseService } from 'src/firebase/firebase.image.service';
 import { JwtService } from '@nestjs/jwt';
+import { SectionModule } from 'src/section/section.module';
+import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { JwtService } from '@nestjs/jwt';
       Priority,
       Project,
     ]),
+    SectionModule,
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'main_queue'),
   ],
   controllers: [CommentController],
   providers: [

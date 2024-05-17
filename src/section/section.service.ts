@@ -1,9 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, Repository } from 'typeorm';
 import { Section } from './entity/section.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSectionRequest } from './dtos/create.section.dto';
 import { Task } from 'src/task/entity/task.entity';
+import {
+  ClientProxy,
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 
 @Injectable()
 export class SectionService {
@@ -12,6 +19,7 @@ export class SectionService {
     private readonly sectionRepository: Repository<Section>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    @Inject('SUBSCRIBERS_SERVICE') private subscribersService: ClientProxy,
   ) {}
 
   private getSectionsBaseQuery() {
@@ -90,6 +98,34 @@ export class SectionService {
       tasks,
       taskIds,
     });
+  }
+
+  @MessagePattern({ cmd: 'add-subscriber' })
+  public async updateSectionResponse(
+    @Payload() subscriber: any,
+    @Ctx() context: RmqContext,
+  ) {
+    const { section, input } = subscriber;
+
+    await this.updateSection(section, input);
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+    channel.ack(originalMsg);
+  }
+
+  public async updateSectionQueue(
+    section: Section,
+    input: CreateSectionRequest,
+  ) {
+    return this.subscribersService.emit(
+      {
+        cmd: 'add-subscriber',
+      },
+      {
+        section,
+        input,
+      },
+    );
   }
 
   public async deleteSection(id: number): Promise<DeleteResult> {

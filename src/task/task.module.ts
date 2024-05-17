@@ -19,6 +19,8 @@ import { FirebaseService } from 'src/firebase/firebase.image.service';
 import { TaskSchedulerService } from './task.schedule.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { JwtService } from '@nestjs/jwt';
+import { SectionModule } from 'src/section/section.module';
+import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { JwtService } from '@nestjs/jwt';
       Comment,
     ]),
     ScheduleModule.forRoot(),
+    SectionModule,
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'main_queue'),
   ],
   providers: [
     TaskService,

@@ -11,9 +11,15 @@ import { Task } from 'src/task/entity/task.entity';
 import { MediaService } from 'src/media/media.service';
 import { FirebaseService } from 'src/firebase/firebase.image.service';
 import { JwtService } from '@nestjs/jwt';
+import { SectionModule } from 'src/section/section.module';
+import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project, User, Section, Task])],
+  imports: [
+    TypeOrmModule.forFeature([Project, User, Section, Task]),
+    SectionModule,
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'main_queue'),
+  ],
   providers: [
     ProjectService,
     UserService,
