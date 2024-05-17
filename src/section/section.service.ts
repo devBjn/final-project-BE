@@ -75,11 +75,10 @@ export class SectionService {
     input: CreateSectionRequest,
   ): Promise<Section> {
     let tasks = [];
-
     if (input.tasks.length) {
       tasks = await Promise.all(
         input.tasks.map(
-          async (id: string) => await this.getTaskBaseQuery(id, section.id),
+          async (id: string) => await this.getTaskBaseQuery(id, section?.id),
         ),
       );
     }

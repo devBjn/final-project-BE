@@ -68,6 +68,7 @@ export class CommentService {
       .orderBy('e.createdAt', 'ASC')
       .leftJoinAndSelect('e.children', 'children')
       .leftJoinAndSelect('e.parent', 'parent')
+      .leftJoin('children.createdBy', 'childCreatedBy')
       .leftJoin('e.createdBy', 'user')
       .leftJoin('e.task', 'task')
       .addSelect([
@@ -80,6 +81,15 @@ export class CommentService {
         'user.color',
         'task.id',
         'parent.id',
+      ])
+      .addSelect([
+        'childCreatedBy.id',
+        'childCreatedBy.username',
+        'childCreatedBy.email',
+        'childCreatedBy.firstName',
+        'childCreatedBy.lastName',
+        'childCreatedBy.avatar',
+        'childCreatedBy.color',
       ])
       .getMany();
 
