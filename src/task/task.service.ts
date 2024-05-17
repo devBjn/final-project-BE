@@ -56,6 +56,7 @@ export class TaskService {
   private async getAllCommentByTask(id: string): Promise<Comment[]> {
     return await this.commentRepository
       .createQueryBuilder('e')
+      .orderBy('e.createdAt', 'ASC')
       .leftJoin('e.createdBy', 'user')
       .leftJoinAndSelect('e.children', 'children')
       .leftJoin('children.createdBy', 'childCreatedBy')

@@ -65,6 +65,7 @@ export class CommentService {
 
   public async getAllComments(): Promise<GetCommentResponse[]> {
     const comments = await this.getCommentsBaseQuery()
+      .orderBy('e.createdAt', 'ASC')
       .leftJoinAndSelect('e.children', 'children')
       .leftJoinAndSelect('e.parent', 'parent')
       .leftJoin('e.createdBy', 'user')
