@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { Section } from './entity/section.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSectionRequest } from './dtos/create.section.dto';
@@ -11,15 +11,19 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+// import { RabbitMQService } from 'src/rabbitmq/rabbitmq.service';
 
 @Injectable()
 export class SectionService {
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(Section)
     private readonly sectionRepository: Repository<Section>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
     @Inject('SUBSCRIBERS_SERVICE') private subscribersService: ClientProxy,
+    // @Inject('RabbitMQService')
+    // private readonly rabbitMQService: RabbitMQService,
   ) {}
 
   private getSectionsBaseQuery() {
@@ -92,6 +96,7 @@ export class SectionService {
     }
 
     const taskIds = tasks.map((task: Task) => task.id);
+    console.log(tasks, 'tasks');
     return await this.sectionRepository.save({
       ...section,
       ...input,
@@ -100,33 +105,61 @@ export class SectionService {
     });
   }
 
-  @MessagePattern({ cmd: 'add-subscriber' })
+  @MessagePattern({ cmd: 'update-section' })
   public async updateSectionResponse(
-    @Payload() subscriber: any,
+    @Payload() data: any,
     @Ctx() context: RmqContext,
   ) {
-    const { section, input } = subscriber;
-
-    await this.updateSection(section, input);
+    console.log('queue');
     const channel = context.getChannelRef();
     const originalMsg = context.getMessage();
-    channel.ack(originalMsg);
+
+    const { section, input } = data;
+    console.log(section, 'section rabbit');
+
+    try {
+      await this.updateSection(section, input);
+      channel.ack(originalMsg);
+    } catch (error) {
+      console.error('Error updating section:', error);
+      // Optionally handle the error (e.g., log, retry, etc.)
+    }
   }
 
-  public async updateSectionQueue(
-    section: Section,
-    input: CreateSectionRequest,
-  ) {
-    return this.subscribersService.emit(
-      {
-        cmd: 'add-subscriber',
-      },
-      {
-        section,
-        input,
-      },
-    );
-  }
+  // public async updateSection(
+  //   section: Section,
+  //   input: CreateSectionRequest,
+  // ): Promise<Section> {
+  //   const queryRunner = this.dataSource.createQueryRunner();
+  //   await queryRunner.connect();
+  //   await queryRunner.startTransaction();
+  //   console.log('here');
+  //   try {
+  //     let tasks = [];
+  //     if (input.tasks.length) {
+  //       tasks = await Promise.all(
+  //         input.tasks.map(
+  //           async (id: string) => await this.getTaskBaseQuery(id, section?.id),
+  //         ),
+  //       );
+  //     }
+
+  //     const taskIds = tasks.map((task: Task) => task.id);
+  //     const sections = await queryRunner.manager.save(Section, {
+  //       ...section,
+  //       ...input,
+  //       tasks,
+  //       taskIds,
+  //     });
+  //     await queryRunner.commitTransaction();
+  //     return sections;
+  //   } catch (e) {
+  //     await queryRunner.rollbackTransaction();
+  //     throw e;
+  //   } finally {
+  //     await queryRunner.release();
+  //   }
+  // }
 
   public async deleteSection(id: number): Promise<DeleteResult> {
     return await this.sectionRepository

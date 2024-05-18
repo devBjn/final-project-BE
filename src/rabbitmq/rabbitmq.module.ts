@@ -26,9 +26,10 @@ export class RabbitMQModule {
               urls: [
                 `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASS}@${process.env.RABBITMQ_HOST}`,
               ],
-              queue,
+              noAck: false,
+              queue: 'section_queue',
               queueOptions: {
-                durable: true, // queue survives broker restart
+                durable: true,
               },
             },
           });

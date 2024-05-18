@@ -1,24 +1,33 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   HttpCode,
+  Inject,
   NotFoundException,
   Param,
   Patch,
   Post,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SectionService } from '../section.service';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateSectionRequest } from '../dtos/create.section.dto';
 import { Section } from '../entity/section.entity';
 import { DeleteResult } from 'typeorm';
+import { ClientProxy } from '@nestjs/microservices';
+import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 
 @ApiTags('Section')
 @Controller('/sections')
 export class SectionController {
-  constructor(private readonly sectionService: SectionService) {}
+  constructor(
+    private readonly sectionService: SectionService,
+    @Inject('SUBSCRIBERS_SERVICE') private subscribersService: ClientProxy,
+  ) {}
 
   @Get('getAll')
   async findAll(): Promise<Section[]> {
@@ -34,13 +43,29 @@ export class SectionController {
   @ApiParam({
     name: 'id',
   })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuardJwt)
+  @UseInterceptors(ClassSerializerInterceptor)
   async update(@Param('id') id, @Body() input: CreateSectionRequest) {
     const section = await this.sectionService.getSection(id);
     if (!section) {
       throw new NotFoundException();
     }
 
-    return await this.sectionService.updateSectionQueue(section, input);
+    console.log('run here');
+    this.subscribersService.send(
+      {
+        cmd: 'update-section',
+      },
+      {
+        id: section.id,
+        section,
+        input,
+      },
+    );
+
+    // await result.subscribe();
+    // return await this.sectionService.updateSection(section, input);
   }
 
   @Delete('remove/:id')

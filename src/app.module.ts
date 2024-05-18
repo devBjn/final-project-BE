@@ -14,6 +14,7 @@ import { TypeModule } from './type/type.module';
 import ormConfig from './config/orm.config';
 import { MediaModule } from './media/media.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     PriorityModule,
     TypeModule,
     MediaModule,
+    RabbitMQModule,
   ],
   controllers: [AppController],
   providers: [AppService],

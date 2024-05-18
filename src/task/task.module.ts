@@ -35,7 +35,7 @@ import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
     ]),
     ScheduleModule.forRoot(),
     SectionModule,
-    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'main_queue'),
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'section_queue'),
   ],
   providers: [
     TaskService,

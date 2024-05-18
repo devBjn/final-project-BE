@@ -32,7 +32,7 @@ import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
       Project,
     ]),
     SectionModule,
-    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'main_queue'),
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'section_queue'),
   ],
   controllers: [CommentController],
   providers: [

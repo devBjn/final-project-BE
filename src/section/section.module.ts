@@ -6,15 +6,16 @@ import { Section } from './entity/section.entity';
 import { Task } from 'src/task/entity/task.entity';
 import { ConfigModule } from '@nestjs/config';
 import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
+import { RabbitMQService } from 'src/rabbitmq/rabbitmq.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Section, Task]),
     ConfigModule,
-    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'main_queue'),
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'section_queue'),
   ],
-  providers: [SectionService],
+  providers: [RabbitMQService, SectionService],
   controllers: [SectionController],
-  exports: [SectionService],
+  exports: [RabbitMQService, SectionService],
 })
 export class SectionModule {}
