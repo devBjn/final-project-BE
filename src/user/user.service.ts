@@ -57,6 +57,7 @@ export class UserService {
       phone: user.phone,
       address: user.address,
       avatar: user.avatar,
+      color: user.color,
     };
   }
 

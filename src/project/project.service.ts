@@ -229,24 +229,24 @@ export class ProjectService {
       };
     });
 
-    if (project.createdBy.id === user.id) {
-      const result = await this.projectRepository.save({
-        id: project.id,
-        name: input.name,
-        description: input.description,
-        category: input.category,
-        sectionsJson: res,
-        teamUsers,
-        createdBy: user,
-      });
-      return {
-        ...result,
-        createdBy: info,
-        tasksJson: project.tasks,
-      };
-    }
+    // if (project.createdBy.id === user.id) {
+    const result = await this.projectRepository.save({
+      id: project.id,
+      name: input.name,
+      description: input.description,
+      category: input.category,
+      sectionsJson: res,
+      teamUsers,
+      createdBy: user,
+    });
+    return {
+      ...result,
+      createdBy: info,
+      tasksJson: project.tasks,
+    };
+    // }
 
-    throw new BadRequestException('You can not edit project!');
+    // throw new BadRequestException('You can not edit project!');
   }
 
   public async deleteProject(

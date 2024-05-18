@@ -18,7 +18,7 @@ import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
   imports: [
     TypeOrmModule.forFeature([Project, User, Section, Task]),
     SectionModule,
-    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'section_queue'),
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'section_queue_test'),
   ],
   providers: [
     ProjectService,

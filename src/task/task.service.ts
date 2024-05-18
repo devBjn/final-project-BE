@@ -416,7 +416,7 @@ export class TaskService {
     const notificationThreshold = new Date(currentTime);
     notificationThreshold.setDate(currentTime.getDate() + 1);
     const deadline = formatDate(notificationThreshold);
-
+    console.log(deadline, 'dl');
     const tasksToNotify = await this.taskRepository
       .createQueryBuilder('e')
       .where('e.deadline = :deadline', {

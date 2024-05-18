@@ -96,7 +96,6 @@ export class SectionService {
     }
 
     const taskIds = tasks.map((task: Task) => task.id);
-    console.log(tasks, 'tasks');
     return await this.sectionRepository.save({
       ...section,
       ...input,
@@ -105,26 +104,26 @@ export class SectionService {
     });
   }
 
-  @MessagePattern({ cmd: 'update-section' })
-  public async updateSectionResponse(
-    @Payload() data: any,
-    @Ctx() context: RmqContext,
-  ) {
-    console.log('queue');
-    const channel = context.getChannelRef();
-    const originalMsg = context.getMessage();
+  // @MessagePattern({ cmd: 'update-section' })
+  // public async updateSectionResponse(
+  //   @Payload() data: any,
+  //   @Ctx() context: RmqContext,
+  // ) {
+  //   console.log('queue');
+  //   const channel = context.getChannelRef();
+  //   const originalMsg = context.getMessage();
 
-    const { section, input } = data;
-    console.log(section, 'section rabbit');
+  //   const { section, input } = data;
+  //   console.log(section, 'section rabbit');
 
-    try {
-      await this.updateSection(section, input);
-      channel.ack(originalMsg);
-    } catch (error) {
-      console.error('Error updating section:', error);
-      // Optionally handle the error (e.g., log, retry, etc.)
-    }
-  }
+  //   try {
+  //     await this.updateSection(section, input);
+  //     channel.ack(originalMsg);
+  //   } catch (error) {
+  //     console.error('Error updating section:', error);
+  //     // Optionally handle the error (e.g., log, retry, etc.)
+  //   }
+  // }
 
   // public async updateSection(
   //   section: Section,

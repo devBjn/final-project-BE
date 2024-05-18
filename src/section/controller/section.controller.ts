@@ -18,7 +18,13 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateSectionRequest } from '../dtos/create.section.dto';
 import { Section } from '../entity/section.entity';
 import { DeleteResult } from 'typeorm';
-import { ClientProxy } from '@nestjs/microservices';
+import {
+  ClientProxy,
+  Ctx,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 
 @ApiTags('Section')
@@ -52,20 +58,37 @@ export class SectionController {
       throw new NotFoundException();
     }
 
-    console.log('run here');
-    this.subscribersService.send(
-      {
-        cmd: 'update-section',
-      },
-      {
-        id: section.id,
-        section,
-        input,
-      },
-    );
+    try {
+      return await this.subscribersService.emit(
+        { cmd: 'update-section' },
+        {
+          id: section.id,
+          section,
+          input,
+        },
+      );
+    } catch (error) {
+      console.error('Error sending update-section message:', error);
+      throw error;
+    }
+  }
 
-    // await result.subscribe();
-    // return await this.sectionService.updateSection(section, input);
+  @MessagePattern({ cmd: 'update-section' })
+  public async updateSectionResponse(
+    @Payload() data: any,
+    @Ctx() context: RmqContext,
+  ) {
+    console.log('run queue');
+    const channel = context.getChannelRef();
+    const originalMsg = context.getMessage();
+
+    const { section, input } = data;
+    try {
+      await this.sectionService.updateSection(section, input);
+      channel.ack(originalMsg);
+    } catch (error) {
+      console.error('Error updating section:', error);
+    }
   }
 
   @Delete('remove/:id')

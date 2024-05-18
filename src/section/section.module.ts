@@ -12,7 +12,7 @@ import { RabbitMQService } from 'src/rabbitmq/rabbitmq.service';
   imports: [
     TypeOrmModule.forFeature([Section, Task]),
     ConfigModule,
-    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'section_queue'),
+    RabbitMQModule.registerRmq('SUBSCRIBERS_SERVICE', 'section_queue_test'),
   ],
   providers: [RabbitMQService, SectionService],
   controllers: [SectionController],

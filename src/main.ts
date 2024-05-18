@@ -28,7 +28,7 @@ async function bootstrap() {
       urls: [
         `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASS}@${process.env.RABBITMQ_HOST}`,
       ],
-      queue: 'section_queue',
+      queue: 'section_queue_test',
       noAck: false,
       queueOptions: {
         durable: true,
